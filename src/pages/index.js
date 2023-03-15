@@ -1,128 +1,244 @@
+// import React from "react"
+// import { graphql, Link } from "gatsby"
+// import Layout from "../components/layout"
+
+// const BlogIndex = ({ data }) => {
+//   const posts = data.allMarkdownRemark.nodes
+
+//   return (
+//     <Layout>
+//       <h1>Blog Posts</h1>
+      
+//       {posts.map(post => (
+//         <article key={post.id}>
+//           <h2>
+//             <Link to={post.fields.slug}>{post.frontmatter.title}</Link>
+//           </h2>
+//           <small>{post.frontmatter.date}</small>
+//           <p dangerouslySetInnerHTML={{ __html: post.excerpt }} />
+//         </article>
+//       ))}
+//     </Layout>
+//   )
+// }
+
+// export const query = graphql`
+//   query {
+//     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+//       nodes {
+//         id
+//         excerpt(pruneLength: 250)
+//         fields {
+//           slug
+//         }
+//         frontmatter {
+//           date(formatString: "MMMM DD, YYYY")
+//           title
+//         }
+//       }
+//     }
+//   }
+// `
+
+// export default BlogIndex
+
+
+// import React from "react"
+// import { Link, graphql } from "gatsby"
+// import { Container, Row, Col, Card, CardImg, CardBody, CardTitle } from "reactstrap"
+// import { Navbar, Nav, NavItem } from "reactstrap"
+// import { StaticImage } from "gatsby-plugin-image"
+
+// const IndexPage = ({ data }) => {
+//   const posts = data.allMarkdownRemark.edges
+
+//   return (
+//     <div>
+//       <div>
+//         <Navbar color="light" light expand="md">
+//           <Nav className="mr-auto" navbar>
+//             <NavItem>
+//               <a className="nav-link" href="#">Home</a>
+//             </NavItem>
+//             <NavItem>
+//               <a className="nav-link" href="#">About</a>
+//             </NavItem>
+//             <NavItem>
+//               <a className="nav-link" href="#">Contact</a>
+//             </NavItem>
+//           </Nav>
+//         </Navbar>
+//         <header className="jumbotron">
+//           <div className="container">
+//             <h1>My Blog</h1>
+//             <p>A blog about all things interesting</p>
+//           </div>
+//         </header>
+//       </div>
+    
+//     <Container>
+//       <Row>
+//         {posts.map(({ node }) => {
+//           const title = node.frontmatter.title || node.fields.slug
+//           return (
+//             <Col md={6} className="mb-4">
+//               <Card>
+//                 <Link to={node.fields.slug}>
+//                 <StaticImage src={post.frontmatter.image} alt="My image" />
+//                   {/* <CardImg top src={node.frontmatter.images} alt={node.frontmatter.title} /> */}
+//                 </Link>
+//                 <CardBody>
+//                   <CardTitle>
+//                     <Link to={node.fields.slug}>{title}</Link>
+//                   </CardTitle>
+//                 </CardBody>
+//               </Card>
+//             </Col>
+//           )
+//         })}
+//       </Row>
+//     </Container>
+//     </div>)
+// }
+
+// export default IndexPage
+
+// export const query = graphql`
+//   query {
+//     allMarkdownRemark(sort: {frontmatter: {date: DESC}}) {
+//       edges {
+//         node {
+//           excerpt(truncate: true)
+//           fields {
+//             slug
+//           }
+//           frontmatter {
+//             date(formatString: "MMMM DD, YYYY")
+//             title
+//             image
+//           }
+//         }
+//       }
+//     }
+//   }
+// `
+
+
 import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import { graphql } from "gatsby"
+import { Container, Row, Col } from "reactstrap"
+import PostList from "../components/post-list"
 
-import Layout from "../components/layout"
-import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
+const IndexPage = ({ data }) => {
+  const posts = data.allMarkdownRemark.edges
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
-
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
-
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
-
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
-
-const IndexPage = () => (
-  <Layout>
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
+  return (
+    <div>
+      <header>
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+          <Container>
+            <a className="navbar-brand" href="/">
+              My Blog
+            </a>
+          </Container>
+        </nav>
+      </header>
+      <Container className="py-4">
+        <Row>
+          <Col>
+            <h1 className="mb-4">Latest Posts</h1>
+            <PostList posts={posts} />
+          </Col>
+        </Row>
+      </Container>
     </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
+  )
+}
 
-/**
- * Head export to define metadata for the page
- *
- * See: https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/
- */
-export const Head = () => <Seo title="Home" />
+export const query = graphql`
+  query {
+    allMarkdownRemark(sort: {frontmatter: {date: DESC}}) {
+      edges {
+        node {
+          excerpt
+          fields {
+            slug
+          }
+          frontmatter {
+            date(formatString: "MMMM DD, YYYY")
+            title
+            description
+            featuredImage {
+              childImageSharp {
+                gatsbyImageData(
+                  width: 640
+                  height: 320
+                  quality: 100
+                  layout: CONSTRAINED
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default IndexPage
+
+// works but no image
+// import React from "react"
+// import { Container, Row, Col } from "reactstrap"
+// import { graphql } from "gatsby"
+// import PostList from "../components/post-list"
+
+// const IndexPage = ({ data }) => {
+//   const posts = data.allMarkdownRemark.edges
+
+//   return (
+//     <Container>
+//       <Row>
+//         <Col>
+//           <h1 className="my-4">Welcome to my blog</h1>
+//         </Col>
+//       </Row>
+//       <Row>
+//         <Col>
+//           <PostList posts={posts} />
+//         </Col>
+//       </Row>
+//     </Container>
+//   )
+// }
+
+// export default IndexPage
+
+// export const query = graphql`
+//   query {
+//     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+//       edges {
+//         node {
+//           excerpt(pruneLength: 250)
+//           fields {
+//             slug
+//           }
+//           frontmatter {
+//             date(formatString: "MMMM DD, YYYY")
+//             title
+//             description
+//             featuredImage {
+//               childImageSharp {
+//                 gatsbyImageData(
+//                   width: 600
+//                   placeholder: BLURRED
+//                   formats: [AUTO, WEBP, AVIF]
+//                 )
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// `

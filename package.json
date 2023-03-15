@@ -1,5 +1,5 @@
 {
-  "homepage": "https://github.com/Venika/blog",
+  "homepage": "https://venikagaur.com/blog",
   "scripts": {
     "deploy": "gatsby build && gh-pages -d public",
     "build": "gatsby build",
